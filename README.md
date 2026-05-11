@@ -1,8 +1,8 @@
 # Centil Password Manager 🛡️
 
-![GitHub repo size](https://img.shields.io/github/repo-size/furkanyasarr0/Centil)
-![GitHub stars](https://img.shields.io/github/stars/furkanyasarr0/Centil?style=social)
-![GitHub license](https://img.shields.io/github/license/furkanyasarr0/Centil)
+![GitHub stars](https://img.shields.io/github/stars/furkanyasarr0/Centil-Password-Manager?style=social)
+![GitHub license](https://img.shields.io/github/license/furkanyasarr0/Centil-Password-Manager?color=blue)
+![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red)
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
 ![Chrome Extension](https://img.shields.io/badge/chrome-extension-orange)
 
