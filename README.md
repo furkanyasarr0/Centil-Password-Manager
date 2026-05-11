@@ -1,5 +1,11 @@
 # Centil Password Manager 🛡️
 
+![GitHub repo size](https://img.shields.io/github/repo-size/furkanyasarr0/Centil)
+![GitHub stars](https://img.shields.io/github/stars/furkanyasarr0/Centil?style=social)
+![GitHub license](https://img.shields.io/github/license/furkanyasarr0/Centil)
+![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
+![Chrome Extension](https://img.shields.io/badge/chrome-extension-orange)
+
 Centil is a secure, open-source, and user-friendly browser extension designed to help you manage your passwords locally with ease. It features a modern UI, high-security encryption, and multi-language support.
 
 ## Features ✨
