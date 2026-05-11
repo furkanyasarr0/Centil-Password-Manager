@@ -74,4 +74,4 @@ Centil uses a master password to encrypt your vault.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-Developed by [Furkan Centil](https://github.com/furkanyasarr0)
+Developed by [Furkan Yasar](https://github.com/furkanyasarr0)
