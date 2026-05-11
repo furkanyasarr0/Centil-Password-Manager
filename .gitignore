@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+
+# Database
+passwords.db
+*.db-journal
+
+# Extension
+.DS_Store
+Thumbs.db
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+.windsurf/

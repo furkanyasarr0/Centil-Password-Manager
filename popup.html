@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Centil Password Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            width: 360px;
+            min-height: 450px;
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            padding: 16px;
+            width: 100%;
+        }
+
+        /* Views */
+        #setup-view, #main-view {
+            display: none;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        /* Card Styles */
+        .site-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .site-card-header {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        #current-site-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            word-break: break-all;
+        }
+
+        /* Form Styles */
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 13px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Actions Bar */
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-main);
+            user-select: none;
+        }
+
+        button:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        button.primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        button.primary:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Search Box */
+        .search-container {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .search-container input {
+            padding-left: 36px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* Password List */
+        .list-container {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 8px;
+        }
+
+        .password-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .password-item:hover {
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border-color: #cbd5e1;
+        }
+
+        .password-info {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .site-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .username {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .password-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .icon-btn {
+            padding: 8px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+
+        .icon-btn:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-btn {
+            font-size: 11px;
+            padding: 6px 10px;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .footer-btn:hover {
+            background: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 500;
+            color: white;
+            z-index: 10000;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            display: none;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .notification.success { background-color: var(--success); }
+        .notification.error { background-color: var(--error); }
+        .notification.info { background-color: var(--primary); }
+
+        .no-passwords {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Modal Backdrop */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(2px);
+            z-index: 5000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="notification-bar" class="notification"></div>
+    
+    <div class="container">
+        <!-- Setup Wizard View -->
+        <div id="setup-view">
+            <header>
+                <div class="logo-area">
+                    <div class="logo-icon">C</div>
+                    <div class="logo-text" data-i18n="setup_title">Centil Kurulum</div>
+                </div>
+                <button id="lang-switch-btn" class="footer-btn" style="border: 1px solid var(--border); padding: 4px 8px;">EN</button>
+            </header>
+
+            <!-- Step 1: Master Password -->
+            <div id="setup-step-1">
+                <div class="site-card">
+                    <div class="site-card-header" data-i18n="step_1_of_2">Aşama 1 / 2</div>
+                    <div style="font-size: 14px; font-weight: 600; margin-top: 5px;" data-i18n="create_master_pass">Ana Şifre Oluşturun</div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;" data-i18n="master_pass_desc">
+                        Verilerinizi koruyacak ana anahtardır. Lütfen güvenli bir şifre seçin.
+                    </p>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="setup-master-password" data-i18n="new_master_pass" placeholder="Yeni Ana Şifre">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="setup-master-password-confirm" data-i18n="confirm_pass" placeholder="Şifre Tekrar">
+                </div>
+                <button id="setup-next-1" class="primary" style="width: 100%; margin-top: 10px;" data-i18n="continue">
+                    Devam Et ➔
+                </button>
+            </div>
+
+            <!-- Step 2: Security Questions -->
+            <div id="setup-step-2" style="display: none;">
+                <div class="site-card">
+                    <div class="site-card-header" data-i18n="step_2_of_2">Aşama 2 / 2</div>
+                    <div style="font-size: 14px; font-weight: 600; margin-top: 5px;" data-i18n="security_questions">Güvenlik Soruları</div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;" data-i18n="security_questions_desc">
+                        Şifrenizi unutursanız hesabınızı kurtarmak için kullanılacaktır.
+                    </p>
+                </div>
+                <div id="setup-questions-container">
+                    <!-- Sorular buraya JS ile eklenecek -->
+                </div>
+                <button id="setup-finish" class="primary" style="width: 100%; margin-top: 10px;" data-i18n="finish_setup">
+                    Kurulumu Tamamla ✓
+                </button>
+            </div>
+        </div>
+
+        <!-- Login View -->
+        <div id="login-view" style="display: none;">
+            <header>
+                <div class="logo-area">
+                    <div class="logo-icon">C</div>
+                    <div class="logo-text" data-i18n="login_title">Giriş Yap</div>
+                </div>
+            </header>
+            <div class="site-card">
+                <div class="site-card-header" data-i18n="vault_locked">Kasa Kilitli</div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;" data-i18n="login_desc">
+                    Devam etmek için lütfen ana şifrenizi girin.
+                </p>
+            </div>
+            <div class="input-group">
+                <input type="password" id="login-password" data-i18n="master_pass" placeholder="Ana Şifre">
+            </div>
+            <button id="login-submit" class="primary" style="width: 100%; margin-top: 10px;" data-i18n="unlock">
+                Kilidi Aç 🔓
+            </button>
+            <div style="text-align: center; margin-top: 15px;">
+                <button id="forgot-password-btn" class="footer-btn" style="font-size: 12px; color: var(--primary);" data-i18n="forgot_pass">Şifremi Unuttum</button>
+            </div>
+        </div>
+
+        <!-- Recovery View -->
+        <div id="recovery-view" style="display: none;">
+            <header>
+                <div class="logo-area">
+                    <div class="logo-icon">C</div>
+                    <div class="logo-text" data-i18n="recovery_title">Kurtarma</div>
+                </div>
+            </header>
+            <div class="site-card">
+                <div class="site-card-header" data-i18n="password_recovery">Şifre Kurtarma</div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;" data-i18n="recovery_desc">
+                    Hesabınızı kurtarmak için güvenlik sorularını yanıtlayın.
+                </p>
+            </div>
+            <div id="recovery-questions-container">
+                <!-- Sorular JS ile gelecek -->
+            </div>
+            <div id="new-password-container" style="display: none;">
+                <div class="input-group">
+                    <input type="password" id="recovery-new-password" data-i18n="new_master_pass" placeholder="Yeni Ana Şifre">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="recovery-new-password-confirm" data-i18n="confirm_pass" placeholder="Yeni Şifre Tekrar">
+                </div>
+            </div>
+            <button id="recovery-submit" class="primary" style="width: 100%; margin-top: 10px;" data-i18n="verify_answers">
+                Yanıtları Doğrula
+            </button>
+            <div style="text-align: center; margin-top: 15px;">
+                <button id="recovery-back" class="footer-btn" data-i18n="back">Geri Dön</button>
+            </div>
+        </div>
+
+        <!-- Main App View -->
+        <div id="main-view">
+            <header>
+                <div class="logo-area">
+                    <div class="logo-icon">C</div>
+                    <div class="logo-text">CENTIL</div>
+                </div>
+                <div style="display: flex; gap: 4px; align-items: center;">
+                    <button id="lang-switch-btn" class="footer-btn" style="border: 1px solid var(--border); padding: 4px 8px; margin-right: 4px;">EN</button>
+                    <button id="lock-btn" class="icon-btn" title="Eklentiyi Kilitle">🔒</button>
+                    <button id="settings-btn" class="icon-btn" title="Hakkında">⚙️</button>
+                </div>
+            </header>
+
+            <div class="site-card">
+                <div class="site-card-header" data-i18n="current_site">Şu Anki Site</div>
+                <div id="current-site-name">Yükleniyor...</div>
+            </div>
+
+            <div class="actions">
+                <button id="add-password-btn" class="primary" data-i18n="add_password">
+                    <span>➕</span> Şifre Ekle
+                </button>
+                <button id="check-site-btn" data-i18n="scan_site">
+                    <span>🔍</span> Siteyi Tara
+                </button>
+            </div>
+
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" data-i18n="search_placeholder" placeholder="Şifrelerde ara...">
+            </div>
+
+            <div id="passwords-list" class="list-container">
+                <!-- Şifreler JS ile buraya eklenecek -->
+            </div>
+
+            <footer>
+                <button id="recovery-btn" class="footer-btn" data-i18n="recovery_btn">
+                    🛡️ Kurtarma
+                </button>
+                <div style="font-size: 11px; color: var(--text-muted);" data-i18n="version">Centil Password Manager v1.0</div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal for Add Password -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="site-card" style="width: 100%; max-width: 320px; margin-bottom: 0;">
+            <div class="site-card-header" data-i18n="new_password_title">Yeni Şifre Ekle</div>
+            <div class="input-group" style="margin-top: 15px;">
+                <input type="text" id="new-site-name" data-i18n="site_name" placeholder="Site Adı">
+            </div>
+            <div class="input-group">
+                <input type="text" id="new-username" data-i18n="username" placeholder="Kullanıcı Adı">
+            </div>
+            <div class="input-group">
+                <input type="password" id="new-password" data-i18n="password" placeholder="Şifre">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button id="modal-cancel" style="flex: 1;" data-i18n="cancel">İptal</button>
+                <button id="modal-save" class="primary" style="flex: 1;" data-i18n="save">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for About -->
+    <div id="about-modal" class="modal-overlay">
+        <div class="site-card" style="width: 100%; max-width: 320px; margin-bottom: 0; text-align: center;">
+            <div class="logo-icon" style="margin: 0 auto 15px auto; width: 48px; height: 48px; font-size: 28px;">C</div>
+            <h3 style="margin-bottom: 8px;" data-i18n="app_name">Centil Password Manager</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;" data-i18n="app_desc">Güvenli ve açık kaynaklı şifre yöneticisi.</p>
+            
+            <div style="background: #f1f5f9; border-radius: 8px; padding: 12px; margin-bottom: 20px; text-align: left;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                    <span style="color: var(--text-muted);" data-i18n="version_label">Versiyon:</span>
+                    <span style="font-weight: 600;">v1.0</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <span style="color: var(--text-muted);" data-i18n="github_label">GitHub:</span>
+                    <a href="https://github.com/furkanyasarr0/Centil-Password-Manager" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 500;" data-i18n="view_repo">Repo'yu Görüntüle</a>
+                </div>
+            </div>
+            
+            <button id="about-close" class="primary" style="width: 100%;" data-i18n="close">Kapat</button>
+        </div>
+    </div>
+
+    <!-- Recovery Dialog Modal (Security Questions Update) -->
+    <div id="recovery-dialog-modal" class="modal-overlay">
+        <div class="site-card" style="width: 100%; max-width: 320px; margin-bottom: 0;">
+            <div class="site-card-header" id="recovery-dialog-title" data-i18n="update_security_questions">Güvenlik Sorularını Güncelle</div>
+            
+            <div id="recovery-auth-section">
+                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;" data-i18n="verify_to_change">
+                    Güvenlik sorularını değiştirmek için ana şifrenizi girin.
+                </p>
+                <div class="input-group">
+                    <input type="password" id="recovery-auth-password" data-i18n="master_pass" placeholder="Ana Şifre">
+                </div>
+                <button id="recovery-auth-submit" class="primary" style="width: 100%;" data-i18n="verify">Doğrula</button>
+            </div>
+
+            <div id="recovery-update-section" style="display: none;">
+                <p style="font-size: 12px; color: var(--text-muted); margin: 10px 0;" data-i18n="set_new_questions">
+                    Yeni güvenlik sorularınızı ve yanıtlarınızı belirleyin.
+                </p>
+                <div id="recovery-update-container">
+                    <!-- JS ile sorular gelecek -->
+                </div>
+                <button id="recovery-update-save" class="primary" style="width: 100%; margin-top: 10px;" data-i18n="update">Güncelle</button>
+            </div>
+
+            <div style="margin-top: 15px; text-align: center;">
+                <button id="recovery-dialog-close" class="footer-btn" data-i18n="cancel">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
